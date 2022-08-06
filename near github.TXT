@@ -1,0 +1,57 @@
+# Kendi HDD boyutunuza göre düzenleyebilirsiniz
+- HDD Kontrol
+
+```
+df -h
+```
+
+- Veya
+
+```
+free -h
+```
+
+- Buradaki available veya free yazan boyutu kontrol ettikten sonra boş alanınıza göre buradaki hafızamızın bir kısmını RAM için kullanacağız
+# Swap Dosyası Oluşturma
+
+```
+sudo fallocate -l <1G> /swapfile
+```
+
+- Yukarıdaki komutun 1G yazan değeri HDDden ayırmak istediğiniz RAM miktarını ifade ediyor.Siz kendinize göre bunu değiştirin ben 32 Gb ayırmak istediğim için 32 yazdım.
+# Swap bölümünü aktif etme ve sadece root erişimi verme
+
+```
+sudo chmod 600 /swapfile
+```
+
+```
+sudo mkswap /swapfile
+```
+
+# Ayırdığımız alanın kontrolü yapalım
+
+```
+free -h
+```
+
+- Komut çıktısında göreceğiniz üzere Swap sekmesinde başlangıçta ayırdığınız <1G> değeri kadar ayrılmış alan olması gerekiyor
+# Swap alanımızı kalıcı hale getirme
+
+```
+sudo cp /etc/fstab /etc/fstab.bak
+```
+
+```
+echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+```
+
+# Swap alanımız üzerinde ayarlamalar yapalım
+
+```
+sudo sysctl vm.swappiness=<70>
+```
+
+```
+sudo nano /etc/sysctl.conf
+```
